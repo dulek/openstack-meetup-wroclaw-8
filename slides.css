@@ -1,0 +1,381 @@
+/******************************************************************************
+ * Basic defaults
+ *****************************************************************************/
+body {
+    font-family: 'Montserrat', Sans;
+    letter-spacing: 0.7px;
+}
+.remark-slide {
+    background-position: 0 0 !important;
+    background-size: 100% 100% !important;
+}
+/* Page numbers in black and on the left */
+.remark-slide .remark-slide-number {
+    bottom: 20px;
+    opacity: 1;
+    position: absolute;
+    color: #000000;
+    left: 33.4px;
+    right: auto;
+    font-size: 13.5px;
+    white-space: pre;
+    letter-spacing: 0px;
+}
+/* Designator text */
+.remark-slide .remark-slide-number .designator {
+    color: #666666;
+    font-family: 'Arial';
+    font-size: 13.5px;
+    letter-spacing: 0;
+}
+.small-text {
+    font-size: 13.5px;
+    margin-top: 6.75px;
+    margin-bottom: 6.75px;
+}
+.medium-text {
+    font-size: 26px;
+}
+.red-text {
+    color: red;
+}
+.green-text {
+    color: green;
+}
+
+
+/******************************************************************************
+ * Title slides
+ *****************************************************************************/
+.remark-slide .title_slide {
+    background-color: #A30000;
+    background-size:  195px, 100%;
+    background-image: url("assets/redhat_logo_reverse.svg"),
+                      url("assets/os_background.png");
+    background-position: 175px 200px, 0% 0%;
+}
+.remark-slide .remark-slide-content.title_slide {
+    color: #FFFFFF;
+    padding-top: 20.8%;
+    padding-left: 20.8%;
+    padding-right: 20.5%;
+    overflow:auto;
+    align: left;
+}
+.title_slide p {
+    font-size: 16px;
+    line-height: 24px;
+}
+.title_slide h1 {
+    font-size: 38.5px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin-bottom: 45.5px;
+}
+.title_slide h2 {
+    font-size: 21.4px;
+    font-weight: normal;
+    margin-bottom: 40px;
+}
+/* Title slides should not have slide numbers */
+.title_slide .remark-slide-number {
+    opacity: 0;
+}
+
+
+/******************************************************************************
+ * Section slides
+ *****************************************************************************/
+.remark-slide .section_slide {
+    background-color: #11485C;
+    background-size: 315px, 278px;
+    background-image: url("assets/bg_green_topleft.svg"),
+                      url("assets/bg_green_bottomright.svg");
+    background-position: 0px 0px, bottom right;
+    display: table;
+
+}
+.remark-slide .remark-slide-content.section_slide {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 51px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+.remark-slide .remark-slide-content.section_slide a {
+    color: #000000;
+}
+/* Section slides should not have slide numbers */
+.section_slide .remark-slide-number {
+    opacity: 0;
+}
+
+/******************************************************************************
+ * Agenda slide
+ *****************************************************************************/
+
+.agenda_slide li {
+    color: black;
+    font-size: 34px;
+}
+
+/******************************************************************************
+ * Normal content slides
+ *****************************************************************************/
+.remark-slide .content_slide {
+    background-color: #F1F1F1;
+    background-size: 145px, 200px;
+    background-image: url("assets/bg_gray_topleft.svg"),
+                      url("assets/bg_gray_bottomright.svg");
+    background-position: 0px 0px, bottom right;
+    color: #000000;
+    padding: 4% 6% 0% 10% !important;
+    font-size: 20px;
+}
+.content_slide h1 {
+    font-weight: lighter;
+    font-size: 41.4px;
+    letter-spacing: 1.1px;
+    margin-bottom: 8px;
+}
+.content_slide h2 {
+    font-weight: lighter;
+    font-size: 21.4px;
+    letter-spacing: 0px;
+    margin-top: 8px;
+}
+.content_slide h3 {
+    font-weight: bold;
+    font-size: 21.4px;
+    letter-spacing: 0px;
+    margin-top: 8px;
+}
+.content_slide p:first-of-type {
+    margin-top: 30px;
+}
+.content_slide p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 0.4px;
+}
+.content_slide li {
+    margin-top: 6.7px;
+    margin-bottom: 6.7px;
+}
+.content_slide:after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    bottom: 55px;
+    left: 2%;
+    width: 96%;
+    background-color: #A0A4A8;
+}
+
+
+/******************************************************************************
+ * Modifiers to Normal content slides
+ *****************************************************************************/
+
+/* Two-column layout */
+.left-column {
+    width: 49%;
+    height: 64%;
+    float: left;
+    margin-top: 40px;
+}
+.right-column {
+    width: 49%;
+    height: 64%;
+    float: right;
+    margin-top: 40px;
+}
+.left-column p:first-of-type {
+    margin-top: 0px;
+}
+.right-column p:first-of-type {
+    margin-top: 0px;
+}
+.left-column img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.right-column img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Three-column layout */
+.left-column-3 {
+    position: absolute;
+    top: 30%;
+    left: 9%;
+    width: 24%;
+    height: 62%;
+}
+.middle-column-3 {
+    position: absolute;
+    top: 30%;
+    left: 38%;
+    width: 24%;
+    height: 62%;
+}
+.right-column-3 {
+    position: absolute;
+    top: 30%;
+    left: 67%;
+    width: 24%;
+    height: 29%;
+}
+.left-column-3 p:first-of-type {
+    margin-top: 0px;
+}
+.middle-column-3 p:first-of-type {
+    margin-top: 0px;
+}
+.right-column-3 p:first-of-type {
+    margin-top: 0px;
+}
+.left-column-3 img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.middle-column-3 img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.right-column-3 img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+/******************************************************************************
+ * Tables
+ *****************************************************************************/
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-size: 17.4px;
+}
+th, td {
+    border: 1px solid white;
+    padding: 6.7px 13.4px 6.7px 13.4px;
+    font-weight: normal;
+    font-size: 17.4px;
+}
+table thead tr {
+    background-color: #CC0000;
+    color: #FFFFFF;
+}
+table tbody tr:nth-child(odd) {
+    background-color: #DCDCDC;
+    color: #4C4C4C;
+}
+table tbody tr:nth-child(even) {
+    background-color: white;
+    color: #4C4C4C;
+}
+.blue-table table thead tr {
+    background-color: #004153;
+}
+.light-blue-table table thead tr {
+    background-color: #A3DBE8;
+}
+.dark-gray-table table thead tr {
+    background-color: #4C4C4C;
+}
+.light-gray-table table thead tr {
+    background-color: #DCDCDC;
+}
+.black-table table thead tr {
+    background-color: black;
+}
+.white-table table thead tr {
+    background-color: white;
+    color: #000000;
+}
+.red-table thead tr {
+    background-color: #A30000;
+}
+.red-table thead tr {
+    background-color: #820000;
+}
+
+
+/******************************************************************************
+ * Code snippets
+ *****************************************************************************/
+.remark-code * {
+    background-color: #DCDCDC;
+    font-size: 21.4px;
+}
+.remark-code-line {
+    padding-left: 13.4px;
+    padding-right: 13.4px;
+}
+.remark-code-line:first-child {
+    padding-top: 13.4px;
+}
+.remark-code-line:last-child {
+    padding-bottom: 13.4px;
+}
+
+/******************************************************************************
+ * Thank you slides
+ *****************************************************************************/
+.remark-slide .thank_you {
+    background-color: #A30000;
+    background-size:  100% !important;
+    background-image: url("assets/os_background.png");
+    background-position: 0% 0% !important;
+}
+.remark-slide .remark-slide-content.thank_you {
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+.remark-slide .thank_you a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.thank_you img {
+    height: 43px;
+    padding-left: 20px;
+    padding-right: 10px;
+    vertical-align: middle;
+}
+
+.thank_you h1 {
+    font-size: 100px;
+    font-weight: bold;
+    text-align: center;
+}
+/* Title slides should not have slide numbers */
+.thank_you .remark-slide-number {
+    opacity: 0;
+}
+
+/******************************************************************************
+ * Slide Backgrounds
+ *****************************************************************************/
+
+.fill-width {
+    color: red;
+    position: fixed;
+    left: 121px;
+    top: 190px;
+    width: 1016px;
+}
+
+.fill-width img {
+    width: 100%;
+}
+
+.preserve-space {
+    white-space: pre;
+}

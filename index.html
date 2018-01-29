@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mini-kurs OpenStacka - OpenStack Wrocław Meetup #8</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="slides.css"></link>
+  </head>
+  <body>
+    <textarea id="source">
+
+layout: true
+name: title_layout
+class: title_slide
+
+---
+
+layout: true
+name: section_layout
+class: section_slide
+
+---
+
+layout: true
+name: agenda_layout
+class: content_slide agenda_slide
+
+---
+
+layout: true
+name: thank_you
+class: thank_you
+
+---
+
+layout: true
+name: content_layout
+class: content_slide
+
+---
+
+template: title_layout
+
+# Mini-kurs OpenStacka<br>z perspektywy użytkownika chmury
+
+## OpenStack Wrocław Meetup #8
+
+Michal Dulko - Software Engineer - Red Hat<br>
+<br>
+31 stycznia 2018<br>
+
+---
+
+template: agenda_layout
+
+# AGENDA
+
+- WTF is OpenStack?
+- Sposoby komunikacji i interakcji z OpenStackiem.
+- "Wyklikanie" VM-ki w Horizon
+- Command Line Interface
+- Glance - obrazy.
+- Migawki (snapshot) VM-ek.
+- Rodzaje IP.
+- Operacje na VM-kach.
+
+---
+
+template: section_layout
+
+Wprowadzenie
+
+---
+
+# WTF is OpenStack?
+
+## Definicja
+
+OpenStack - oprogramowanie z dziedziny chmur obliczeniowych w modelu
+Infrastructure as a Service (IaaS) rozwijane przez Rackspace Cloud oraz NASA.
+Wśród 150 firm rozwijających technologię OpenStack są m.in.: AMD, Avaya, Intel,
+Canonical, Novell, Cisco, Dell, IBM, HP, Fujistu.  OpenStack posiada API zgodne
+z Amazon EC2.
+
+---
+
+# WTF is OpenStack?
+
+## Definicja
+
+~~OpenStack - oprogramowanie z dziedziny chmur obliczeniowych w modelu
+Infrastructure as a Service (IaaS) rozwijane przez Rackspace Cloud oraz NASA.
+Wśród 150 firm rozwijających technologię OpenStack są m.in.: AMD, Avaya, Intel,
+Canonical, Novell, Cisco, Dell, IBM, HP, Fujistu.  OpenStack posiada API zgodne
+z Amazon EC2.~~
+
+--
+
+OpenStack is a free and open-source software platform for cloud computing,
+mostly deployed as infrastructure-as-a-service (IaaS), whereby virtual servers
+and other resources are made available to customers. The software platform
+consists of interrelated components that control diverse, multi-vendor hardware
+pools of processing, storage, and networking resources throughout a data
+center. Users either manage it through a web-based dashboard, through
+command-line tools, or through RESTful web services.
+
+---
+
+# WTF is OpenStack?
+
+## Komponenty
+
+- Keystone - identity - users, projects, tokens
+- Nova - compute - VMs
+- Neutron - networking - networks, subnets, IPs
+- Glance - images - OS images
+- Cinder - block storage - volumes
+- Swift - object storage - objects
+- Ironic - bare metal - servers
+
+--
+
+…i maaasa innych (ponad 50 aktywnych), np. Designate (DNS), Magnum (kontenery),
+Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
+
+---
+
+# WTF is OpenStack?
+
+## Sposoby komunikacji
+
+- REST API
+  - każdy projekt ma własne
+    - Keystone catalog mówi gdzie szukać danego API.
+  - stabline, wersjonowane
+  - zdarzają się niespójności pomiędzy projektami
+- **Horizon**
+  - Web UI
+- python-\*client (np. python-novaclient, python-neutronclient)
+  - per-project CLIs
+  - niespójne
+- **python-openstackclient**
+  - global CLI
+  - nie wszystkie najnowsze funkcje obsługiwane
+
+---
+
+# Horizon
+
+## Dostęp
+
+.fill-width[![Insert graphic here](assets/screenshots/horizon-basic.png)]
+
+---
+
+# Horizon (a właściwie Keystone)
+
+## domains, projects (tenants), users, roles
+
+- **User** - użytkownik, może należeć do jednego i więcej projektów
+  - np. Stefan - administrator aplikacji XYZ, Zenon - administrator aplikacji ABC
+- **Project (tenant)** - grupuje i izoluje zasoby chmury
+  - np. JanuszCorp, firma posiadająca aplikacje XYZ i ABC
+- **Domain** - grupuje użytkowników i projekty dla łatwego zarządzania uprawnieniami
+  - np. klienci i projekty zewnętrzne chmury PolCloudex, projekty wewnętrzne PolCloudex
+
+---
+
+# Horizon (a właściwie Keystone i Nova)
+
+## regions, availability zones
+
+.left-column[
+- **Region** - oddzielny service catalog = oddzielny zestaw endpointów = oddzielne instancje service'ów
+- **Availability zone** - grupowania hostów wewnątrz chmury, zarządzane przez
+  administratora chmury, zwykle tożsame z failure domains.
+]
+
+.right-column[
+![Insert graphic here](assets/screenshots/horizon-regions.png)
+]
+
+---
+
+# Horizon
+
+## Quotas
+
+.fill-width[![Insert graphic here](assets/screenshots/horizon-quotas.png)]
+
+---
+
+# Horizon (znowu raczej Keystone)
+
+## API access
+
+.fill-width[![Insert graphic here](assets/screenshots/horizon-api.png)]
+
+---
+
+# Horizon
+
+## Uruchamiamy VM-kę (instancję)
+
+- Project → Compute → Instances
+- Launch Instance
+  - Details - podstawy
+     - Name - *dowolna nazwa*
+  - Source - z czego uruchomić maszynę
+     - Select Boot Source: *Image (z obrazu OS-a)*
+     - Create new volume: *No*
+     - Available: Ubuntu *17.10*
+  - Flavor - jakie parametry ma mieć maszyna
+     - Available: *s1-8*
+  - Networks - do jakich sieci być wpięta maszyna
+     - Ext-Net jest już wybrana
+  - Ports - do jakich portów sieciowych ma być wpięta maszyna
+
+---
+
+# Horizon
+
+## Uruchamiamy VM-kę (instancję)
+
+- Launch Instance
+  - Security Groups - co VM-ka ma mieć otwarte na firewallu
+     - Default jest już wybrana
+  - Key Pair - za pomocą jakiego klucza będziemy się logować do VM-ki
+     - Create Key Pair
+        - Name: *dowolna nazwa*
+        - Create Keypair
+        - **ZAPISZCIE KLUCZ W PLIKU NA DYSKU!**
+     - Configuration - cloud init script
+     - Pozostałe pominiemy.
+  - **Launch Instance!**
+  - Czekamy aż VM-ka przejdzie w stan *ACTIVE*.
+
+---
+
+# Horizon (SSH)
+
+## Logujemy się do VM-ki
+
+- Rzućmy okiem na Security Groups (Network → Security Groups → default → Manage Rules).
+- IP znajdziemy w kolumnie IP Address na liście instancji.
+
+  ![Insert graphic here](assets/screenshots/horizon-ip.png)
+
+- Wykonujemy w konsoli (zapisany klucz w ~/.ssh/ovh):
+
+  ```bash
+  $ ssh -i ~/.ssh/ovh ubuntu@$IP
+
+  ```
+- …i powinniśmy zalogować się do konsoli naszej VM-ki!
+
+---
+
+template: section_layout
+
+Command Line Interface
+
+---
+
+# OpenStack-Client
+
+## Dane logowania
+
+- Dane logowania do chmury znajdują się w pliku **OpenStack RC**. Można go pobrać z
+  Horizona (Identity → API Access → Download OpenStack RC File → OpenStack RC
+  File (…)).
+- Zawiera on zmienne systemowe, których klienty OpenStacka użyją do logowania,
+  m.in. URL do Keystone'a, użytkownika, hasło, projekt, region.
+- Alternatywnym formatem jest clouds.yaml, ale działa tylko z python-openstackclient.
+
+```bash
+mdulko:openrcs/ $ source ovh
+mdulko:openrcs/ $ env | grep OS_
+OS_AUTH_URL=https://auth.cloud.ovh.net/v2.0/
+OS_TENANT_ID=dff393b1184a4421acd532971855ce6b
+OS_TENANT_NAME=1746933863448415
+OS_USERNAME=FOOOBAR
+OS_PASSWORD=FOOOOOBAAAAAARBAAAAZ
+OS_REGION_NAME=WAW1
+```
+
+---
+
+# OpenStack-Client
+
+## Podstawy
+
+OSC ma stałą strukturę poleceń:
+
+```bash
+$ openstack <rzeczownik> <czasownik> <parametry>
+$ openstack server list
+$ openstack volume create --size 10 nazwa_wolumenu
+$ openstack security group list
+```
+
+OSC ma tryb "stały":
+
+```bash
+$ openstack
+(openstack) server list
+<odpowiedź>
+(openstack) network list
+```
+
+---
+
+# OpenStack-Client
+
+## Podstawy
+
+OSC ma przydatną pomoc:
+
+```bash
+$ openstack help user create
+usage: openstack user create [-h] [-f {json,shell,table,value,yaml}]
+                             [-c COLUMN] [--max-width <integer>] [--fit-width]
+                             [--print-empty] [--noindent] [--prefix PREFIX]
+                             [--project <project>] [--password <password>]
+                             [--password-prompt] [--email <email-address>]
+                             [--enable | --disable] [--or-show]
+                             <name>
+```
+
+---
+
+# OpenStack-Client
+
+## Tworzenie wolumenu z obrazu
+
+```bash
+openstack image list
+openstack volume create --size 5 \
+          --image 00ca8728-bb95-44d5-820e-69725c8a6450 ubuntu-volume
+openstack volume list
+openstack volume show 07d287e9-f4e7-4114-b2d8-ebb094ff80e0
+```
+
+---
+
+# OpenStack-Client
+
+## Bootowanie VM-ki z wolumenu
+
+```bash
+openstack flavor list
+openstack network list
+openstack keypair list
+openstack server create --flavor s1-8 \
+          --volume 07d287e9-f4e7-4114-b2d8-ebb094ff80e0 \
+          --network 6c928965-47ea-463f-acc8-6d4a152e9745 \
+          --key-name TEST3 ubuntu-vm
+openstack server list
+```
+
+---
+
+# OpenStack-Client
+
+## SSH i instalacja Apache'a
+
+```bash
+ssh -i ~/.ssh/ovh_rsa2 ubuntu@145.239.29.153
+sudo apt install apache2
+```
+
+I teraz po wejściu na podane IP powinniście zobaczyć stronę startową Apache'a. :)
+
+---
+
+# OpenStack-Client
+
+## Migawka wolumenu
+
+```bash
+openstack volume list
+openstack volume snapshot create --force \
+          --volume 07d287e9-f4e7-4114-b2d8-ebb094ff80e0 ubuntu-snapshot
+```
+
+---
+
+# OpenStack-Client
+
+## VM z migawki wolumenu
+
+```bash
+openstack volume create --snapshot ubuntu-snapshot ubuntu-volume2
+openstack server create --flavor s1-8 \
+          --volume c189f92f-4b0b-486a-baf9-de33d7b38bbf \
+          --network 6c928965-47ea-463f-acc8-6d4a152e9745 \
+          --key-name TEST3 ubuntu-vm2
+```
+
+---
+
+# OpenStack-Client
+
+## Nagrywanie wolumenu do obrazu
+
+```bash
+openstack server delete ubuntu-vm2
+cinder image-create --force \
+       --container-format bare \ 
+       --disk-format qcow2 \
+       --volume c189f92f-4b0b-486a-baf9-de33d7b38bbf ubuntu-with-apache
+```
+
+Można też zrobić snapshot instancji bezpośrednio:
+
+```bash
+openstack server image create --name ubuntu-with-apache ubuntu-vm
+```
+
+---
+
+template: section_layout
+
+Inne czynności
+
+---
+
+# Wgrywanie własnego obrazu
+
+```bash
+openstack image create --container-format bare \
+          --disk-format qcow2 --file <plik> <nazwa>
+```
+
+---
+
+# Operacje na VM-kach
+
+- **Soft/Hard Reboot** - twardy/miękki restart
+- **Pause** - zaprzestanie dawanie VM-ce cyklów procesora.
+- **Suspend** - hibernacja.
+- **Resume** - odpauzowanie/odhibernowanie.
+- **Shut off** - wyłączenie VM-ki.
+- **Start** - bootowanie VM-ki.
+- **Lock/Unlock** - zablokowanie czynności na VM-ce.
+- **Shelve/Unshelve** - zaznacz jako niepotrzebny, może zostać wtedy wyłączony.
+- **Rebuild** - usuwa dane i bootuje VM-kę ze świeżego image'u. Id i IP zostają takie same.
+- **Resize** - zmienia flavor (restartuje VM-kę), trzeba potwierdzić (Resize Confirm/Revert).
+- **Cold Migrate** - (tylko admin), przenosi VM-kę na innego hosta wyłączając ją.
+- **Live Migrate** - (tylko admin), przenosi VM-kę na innego hosta "na żywo".
+
+---
+
+# Security Groups
+
+## TODO
+
+---
+
+# Fixed vs Floating IP
+
+## TODO
+
+---
+
+template: thank_you
+
+# DZIĘKI!
+
+**Prezentację można znaleźć na:**
+
+- https://dulek.github.io/openstack-meetup-wroclaw-8
+- https://github.com/dulek/openstack-meetup-wroclaw-8
+
+**Michal Dulko**
+
+![email](assets/email.png)   [mdulko@redhat.com](mailto:mdulko@redhat.com)
+![irc](assets/irc.png)   [dulek (freenode)](irc://chat.freenode.net/dulek,isnick)
+
+---
+
+template: section_layout
+
+![CC](assets/cc.svg)
+.medium-text[
+Prezentacja jest udostępniana na licencji
+
+http://creativecommons.org/licenses/by/4.0/
+]
+
+    </textarea>
+    <script src="remark.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        ratio: '16:9',
+        slideNumberFormat: '%current%   <span class="designator"> Mini-kurs OpenStacka · Styczeń 2018 · Wrocław</span>',
+        countIncrementalSlides: false
+      });
+    </script>
+  </body>
+</html>
+
+<!-- vim: set ft=markdown : -->
