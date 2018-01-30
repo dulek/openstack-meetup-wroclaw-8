@@ -170,7 +170,7 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
 ## regions, availability zones
 
 .left-column[
-- **Region** - oddzielny service catalog = oddzielny zestaw endpointów = oddzielne instancje service'ów
+- **Region** - oddzielny service catalog = oddzielny zestaw endpointów = oddzielne instancje service'ów, czyli w praktyce oddzielna chmura.
 - **Availability zone** - grupowania hostów wewnątrz chmury, zarządzane przez
   administratora chmury, zwykle tożsame z failure domains.
 ]
@@ -209,7 +209,7 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
      - Select Boot Source: *Image (z obrazu OS-a)*
      - Create new volume: *No*
      - Available: Ubuntu *17.10*
-  - Flavor - jakie parametry ma mieć maszyna
+  - Flavor - jakie parametry ma mieć maszyna - RAM, dysk(i), ilość VCPU
      - Available: *s1-8*
   - Networks - do jakich sieci być wpięta maszyna
      - Ext-Net jest już wybrana
