@@ -215,7 +215,7 @@ Wprowadzenie
      - Create new volume: *No*
      - Available: *Ubuntu 16.04*
   - Flavor - jakie parametry ma mieć maszyna - RAM, dysk(i), ilość VCPU
-     - Available: *s1-8*
+     - Available: *r2-15*
   - Networks - do jakich sieci być wpięta maszyna
      - Ext-Net jest już wybrana
   - Ports - do jakich portów sieciowych ma być wpięta maszyna
@@ -374,7 +374,7 @@ openstack volume show 07d287e9-f4e7-4114-b2d8-ebb094ff80e0
 openstack flavor list
 openstack network list
 openstack keypair list
-openstack server create --flavor s1-8 \
+openstack server create --flavor r2-15 \
           --volume 07d287e9-f4e7-4114-b2d8-ebb094ff80e0 \
           --network 6c928965-47ea-463f-acc8-6d4a152e9745 \
           --key-name TEST3 ubuntu-vm
@@ -414,7 +414,7 @@ openstack volume snapshot create --force \
 
 ```bash
 openstack volume create --snapshot ubuntu-snapshot ubuntu-volume2
-openstack server create --flavor s1-8 \
+openstack server create --flavor r2-15 \
           --volume c189f92f-4b0b-486a-baf9-de33d7b38bbf \
           --network 6c928965-47ea-463f-acc8-6d4a152e9745 \
           --key-name TEST3 ubuntu-vm2
@@ -576,7 +576,7 @@ hostname: rks-chuwdu
 I uruchomcie VM-kę z parametrem:
 ```bash
 openstack server create --image <image-id> --network <network-id> \
-          --flavor s1-8 --user-data cloud-init.yaml -- <nazwa>
+          --flavor r2-15 --user-data cloud-init.yaml -- <nazwa>
 ```
 
 --
