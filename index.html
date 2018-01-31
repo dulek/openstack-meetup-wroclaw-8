@@ -570,20 +570,20 @@ exit
 Do pliku cloud-init.yaml wpiszcie:
 ```yaml
 # cloud-config
-hostname: rks-chuwdu
+hostname: rh-and-ovh-rules
 ```
 
 I uruchomcie VM-kę z parametrem:
 ```bash
 openstack server create --image <image-id> --network <network-id> \
-          --flavor r2-15 --user-data cloud-init.yaml -- <nazwa>
+          --flavor r2-15 --user-data cloud-init.yaml <nazwa>
 ```
 
 --
 
 ```bash
 ssh -i ~/.ssh/ovh ubuntu@<ip>
-ubuntu@rks-chuwdu:~$
+ubuntu@rh-and-ovh-rules:~$
 ```
 
 ---
