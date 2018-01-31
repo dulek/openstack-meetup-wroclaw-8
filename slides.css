@@ -52,7 +52,7 @@ body {
     background-size:  195px, 100%;
     background-image: url("assets/redhat_logo_reverse.svg"),
                       url("assets/os_background.png");
-    background-position: 175px 200px, 0% 0%;
+    background-position: 175px 100px, 0% 0%;
 }
 .remark-slide .remark-slide-content.title_slide {
     color: #FFFFFF;
@@ -118,7 +118,7 @@ body {
 
 .agenda_slide li {
     color: black;
-    font-size: 34px;
+    font-size: 26px;
 }
 
 /******************************************************************************
@@ -311,7 +311,7 @@ table tbody tr:nth-child(even) {
  *****************************************************************************/
 .remark-code * {
     background-color: #DCDCDC;
-    font-size: 21.4px;
+    font-size: 18px;
 }
 .remark-code-line {
     padding-left: 13.4px;
@@ -367,9 +367,9 @@ table tbody tr:nth-child(even) {
 .fill-width {
     color: red;
     position: fixed;
-    left: 121px;
+    left: 80px;
     top: 190px;
-    width: 1016px;
+    width: 750px;
 }
 
 .fill-width img {
