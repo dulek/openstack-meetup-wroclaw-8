@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Mini-kurs OpenStacka - OpenStack Wrocław Meetup #8</title>
+    <title>OpenStack Wrocław Meetup #8 - mini kurs</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="slides.css"></link>
   </head>
@@ -40,11 +40,11 @@ class: content_slide
 
 template: title_layout
 
-# Mini-kurs OpenStacka<br>z perspektywy użytkownika chmury
+# OpenStack Wrocław Meetup #8
 
-## OpenStack Wrocław Meetup #8
+## Mini kurs dla użytkowników
 
-Michal Dulko - Software Engineer - Red Hat<br>
+Michał Dulko - Software Engineer - Red Hat<br>
 <br>
 31 stycznia 2018<br>
 
@@ -54,14 +54,11 @@ template: agenda_layout
 
 # AGENDA
 
-- WTF is OpenStack?
-- Sposoby komunikacji i interakcji z OpenStackiem.
-- "Wyklikanie" VM-ki w Horizon
-- Command Line Interface
-- Glance - obrazy.
-- Migawki (snapshot) VM-ek.
-- Rodzaje IP.
-- Operacje na VM-kach.
+1. WTF is OpenStack?
+2. Sposoby komunikacji i interakcji z OpenStackiem
+3. "Wyklikanie" VM-ki w Horizon
+4. Command Line Interface (python-openstackclient)
+5. Inne przydatne czynności
 
 ---
 
@@ -144,9 +141,16 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
 
 ---
 
+template: section_layout
+
+Wprowadzenie
+
+---
+
+
 # Horizon
 
-## Dostęp
+## Dostęp: **https://horizon.cloud.ovh.net**
 
 .fill-width[![Insert graphic here](assets/screenshots/horizon-basic.png)]
 
@@ -154,7 +158,7 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
 
 # Horizon (a właściwie Keystone)
 
-## domains, projects (tenants), users, roles
+## users, projects (tenants), domains, roles
 
 - **User** - użytkownik, może należeć do jednego i więcej projektów
   - np. Stefan - administrator aplikacji XYZ, Zenon - administrator aplikacji ABC
@@ -162,6 +166,7 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
   - np. JanuszCorp, firma posiadająca aplikacje XYZ i ABC
 - **Domain** - grupuje użytkowników i projekty dla łatwego zarządzania uprawnieniami
   - np. klienci i projekty zewnętrzne chmury PolCloudex, projekty wewnętrzne PolCloudex
+- **Role** - zestaw uprawnień danego użytkownika w danym projekcie.
 
 ---
 
@@ -208,7 +213,7 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
   - Source - z czego uruchomić maszynę
      - Select Boot Source: *Image (z obrazu OS-a)*
      - Create new volume: *No*
-     - Available: Ubuntu *17.10*
+     - Available: *Ubuntu 16.04*
   - Flavor - jakie parametry ma mieć maszyna - RAM, dysk(i), ilość VCPU
      - Available: *s1-8*
   - Networks - do jakich sieci być wpięta maszyna
@@ -229,8 +234,8 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
         - Name: *dowolna nazwa*
         - Create Keypair
         - **ZAPISZCIE KLUCZ W PLIKU NA DYSKU!**
-     - Configuration - cloud init script
-     - Pozostałe pominiemy.
+   - Configuration - cloud init script (https://cloud-init.io/)
+   - Pozostałe pominiemy.
   - **Launch Instance!**
   - Czekamy aż VM-ka przejdzie w stan *ACTIVE*.
 
@@ -249,8 +254,8 @@ Manila (filesystem storage), Octavia (LBaaS), Heat (orchestration)…
 
   ```bash
   $ ssh -i ~/.ssh/ovh ubuntu@$IP
-
   ```
+
 - …i powinniśmy zalogować się do konsoli naszej VM-ki!
 
 ---
@@ -261,6 +266,25 @@ Command Line Interface
 
 ---
 
+# OpenStack-Client
+
+## Jumpbox VM
+
+- Zawiera python-openstackclient, plik openrc
+
+- IP: **213.251.131.44**
+- konta dla uczestnikow
+  - user1:user1
+  - …
+  - user30:user30
+
+Logowanie przez:
+
+```bash
+ssh user1@213.251.131.44
+```
+
+---
 # OpenStack-Client
 
 ## Dane logowania
@@ -317,7 +341,7 @@ OSC ma przydatną pomoc:
 
 ```bash
 $ openstack help user create
-usage: openstack user create [-h] [-f {json,shell,table,value,yaml}]
+usage: openstack user create [-h] [-f {json,bash,table,value,yaml}]
                              [-c COLUMN] [--max-width <integer>] [--fit-width]
                              [--print-empty] [--noindent] [--prefix PREFIX]
                              [--project <project>] [--password <password>]
@@ -364,7 +388,7 @@ openstack server list
 ## SSH i instalacja Apache'a
 
 ```bash
-ssh -i ~/.ssh/ovh_rsa2 ubuntu@145.239.29.153
+ssh -i ~/.ssh/ovh ubuntu@145.239.29.153
 sudo apt install apache2
 ```
 
@@ -426,14 +450,20 @@ Inne czynności
 
 # Wgrywanie własnego obrazu
 
+## Czyli - a jakbym chciał inny OS?
+
 ```bash
 openstack image create --container-format bare \
           --disk-format qcow2 --file <plik> <nazwa>
+openstack image list
+openstack image show <nazwa>
 ```
 
 ---
 
 # Operacje na VM-kach
+
+## O co tu w ogóle chodzi?
 
 - **Soft/Hard Reboot** - twardy/miękki restart
 - **Pause** - zaprzestanie dawanie VM-ce cyklów procesora.
@@ -443,22 +473,118 @@ openstack image create --container-format bare \
 - **Start** - bootowanie VM-ki.
 - **Lock/Unlock** - zablokowanie czynności na VM-ce.
 - **Shelve/Unshelve** - zaznacz jako niepotrzebny, może zostać wtedy wyłączony.
-- **Rebuild** - usuwa dane i bootuje VM-kę ze świeżego image'u. Id i IP zostają takie same.
-- **Resize** - zmienia flavor (restartuje VM-kę), trzeba potwierdzić (Resize Confirm/Revert).
-- **Cold Migrate** - (tylko admin), przenosi VM-kę na innego hosta wyłączając ją.
+- **Rebuild** - usuwa dane i bootuje VM-kę ze świeżego image'u. Id i IP zostają
+  takie same.
+- **Resize** - zmienia flavor (restartuje VM-kę), trzeba potwierdzić (Resize
+  Confirm/Revert).
+- **Cold Migrate** - (tylko admin), przenosi VM-kę na innego hosta wyłączając
+  ją.
 - **Live Migrate** - (tylko admin), przenosi VM-kę na innego hosta "na żywo".
 
 ---
 
 # Security Groups
 
-## TODO
+## Czyli - czemu nie mogę zrobić SSH do VM-ki?
+
+```bash
+openstack security group list
+openstack security group create icmp-only
+openstack server add security group ubuntu-vm icmp-only
+# ping działa
+openstack server remove security group ubuntu-vm default
+# ping nie działa
+openstack security group rule create --protocol icmp icmp-only
+# ping działa, ale nie SSH
+openstack server add security group default
+openstack server remove security group icmp-only
+# wszystko znowu działa
+```
 
 ---
 
 # Fixed vs Floating IP
 
-## TODO
+W OpenStacku VM może mieć dwa rodzaje IP:
+
+- **Fixed IP**
+  - Klasyczne IP przydzielone z podsieci, do której wpięta jest VM-ka.
+  - Zwykle używane do łączenia VM-ek do sieci lokalnych ("chmurowych").
+  - W OVH Ext-Net przydziela IP publiczne.
+- **Floating IP**
+  - De-facto "alias" na port na VM-ce, VM nie wie, że jest dostępna
+    pod danym adresem, przekierowanie załatwione manipulacją pakietami.
+  - Wymaga "rezerwowania" z dostępnej dla projektu puli (quoty!) i ręcznego
+    "podłączenia" do VM-k.
+  - Zwykle używane do zapewniania VM-kom zewnętrznych IP.
+  - W OVH nie używane.
+
+---
+
+# Podłączanie wolumenów
+
+## Czyli - przenosimy dane w niepraktyczny sposób
+
+```bash
+openstack volume create --size 1 volume
+openstack server add volume ubuntu-vm volume
+ssh -i ~/.ssh/ovh ubuntu@<ip>
+
+# Na VM-ce:
+sudo su
+fdisk -l
+mkfs.ext4 /dev/sdb
+mkdir -p /mnt/volume
+mount /dev/sdb /mnt/volume
+touch foobar
+exit
+
+# Poza VM-ką
+openstack server remove volume ubuntu-vm volume
+```
+
+---
+# Podłączanie wolumenów
+
+## Czyli - przenosimy dane w niepraktyczny sposób
+
+```bash
+openstack server add volume ubuntu-vm2 volume
+ssh -i ~/.ssh/ovh ubuntu@<ip2>
+
+# Na VM-ce:
+sudo su
+fdisk -l
+mkdir -p /mnt/volume
+mount /dev/sdb /mnt/volume
+ls -la
+exit
+```
+
+---
+
+# Cloud init
+
+## Czyli - jak zrobić, żeby nie mieć tych głupich kluczy?
+
+Do pliku cloud-init.yaml wpiszcie:
+```yaml
+# cloud-config
+hostname: rks-huwdu
+```
+
+I uruchomcie VM-kę z parametrem:
+```bash
+openstack server create --image <image-id> --network <network-id> \
+          --flavor s1-8 --user-data cloud-init.yaml -- <nazwa>
+```
+
+--
+
+```bash
+ssh -i ~/.ssh/ovh ubuntu@<ip>
+ubuntu@rks-chuwdu:~$
+```
 
 ---
 
@@ -471,7 +597,7 @@ template: thank_you
 - https://dulek.github.io/openstack-meetup-wroclaw-8
 - https://github.com/dulek/openstack-meetup-wroclaw-8
 
-**Michal Dulko**
+**Michał Dulko**
 
 ![email](assets/email.png)   [mdulko@redhat.com](mailto:mdulko@redhat.com)
 ![irc](assets/irc.png)   [dulek (freenode)](irc://chat.freenode.net/dulek,isnick)
